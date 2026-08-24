@@ -1,4 +1,5 @@
-package model;
+package co.generation.clinica.model;
+
 import java.util.Objects;
 
 public class Paciente {

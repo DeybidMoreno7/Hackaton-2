@@ -1,4 +1,7 @@
-package model;
+package co.generation.clinica.model;
 
-public class EstadoTurno {
+public enum EstadoTurno {
+    PENDIENTE,
+    ATENDIDO,
+    CANCELADO
 }
