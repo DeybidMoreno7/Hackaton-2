@@ -1,8 +1,8 @@
 package co.generation.clinica.model;
 
-import interfaces.Registrable;
+import co.generation.clinica.interfaces.Registrable;
 
-public class Medico implements Registrable{
+public class Medico implements Registrable {
 
     private int id;
     private String nombre;
@@ -80,4 +80,22 @@ public class Medico implements Registrable{
         return "Dr. "+nombre+" "+apellido+" - "+especialidad;
     }
 
+    @Override
+    public String getDatosRegistro() {
+        return this.toString();
+    }
+
+    @Override
+    public boolean esValido() {
+        if(this.nombre==null || this.nombre.trim().isEmpty()){
+            return false;
+        }
+        if(this.apellido==null || this.apellido.trim().isEmpty()){
+            return false;
+        }
+        if(this.especialidad==null){
+            return false;
+        }
+        return true;
+    }
 }
