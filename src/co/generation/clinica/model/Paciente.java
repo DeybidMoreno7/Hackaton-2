@@ -3,17 +3,17 @@ package co.generation.clinica.model;
 import java.util.Objects;
 
 public class Paciente {
- private int id;
- private  String cedula;
- private String nombre;
- private String apellido;
- private String telefono;
+    private int id;
+    private String cedula;
+    private String nombre;
+    private String apellido;
+    private String telefono;
 
     public Paciente(String cedula, String nombre, String apellido, String telefono) {
-    setCedula(cedula);
-    setNombre(nombre);
-    setApellido(apellido);
-    setTelefono(telefono);
+        setCedula(cedula);
+        setNombre(nombre);
+        setApellido(apellido);
+        setTelefono(telefono);
     }
 
     public Paciente(int id, String cedula, String nombre, String apellido, String telefono) {
@@ -21,21 +21,23 @@ public class Paciente {
         this.id = id;
     }
 
-    public int getId (){
+    public int getId() {
         return id;
     }
-    public void setId (int id) {
+
+    public void setId(int id) {
         this.id = id;
     }
-    public String getCedula(){
+
+    public String getCedula() {
         return cedula;
     }
 
-    public void setCedula (String cedula){
-        if (nombre == null || cedula.trim().isEmpty() ){
-            throw new IllegalArgumentException ("Ingrese un nombre valido, por favor");
+    public void setCedula(String cedula) {
+        if (cedula == null || cedula.trim().isEmpty()) {
+            throw new IllegalArgumentException("Ingrese una cédula válida, por favor");
         }
-        this.nombre=nombre.trim();
+        this.cedula = cedula.trim();
     }
 
     public String getNombre() {
@@ -48,22 +50,24 @@ public class Paciente {
 
     public String getApellido(){
         return apellido;
-}
-public void setApellido (String apellido){
-        if (apellido == null || apellido.trim ().isEmpty ()){
-            throw new IllegalArgumentException ("Ingrese un apellido valido");
+    }
+
+    public void setApellido(String apellido) {
+        if (apellido == null || apellido.trim().isEmpty()) {
+            throw new IllegalArgumentException("Ingrese un apellido válido");
         }
-        this.apellido = apellido.trim ();
-}
-public String getTelefono (){
+        this.apellido = apellido.trim();
+    }
+
+    public String getTelefono() {
         return telefono;
 }
 public void setTelefono (String telefono){
         if (telefono == null || !telefono.matches ("^[0-9]{7,10}$")){
             throw new IllegalArgumentException ("El número ingresado debe contener solo digitos numericos, max. 10, min . ");
         }
-        this.telefono =telefono;
-}
+        this.telefono = telefono.trim();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -83,6 +87,3 @@ public void setTelefono (String telefono){
         return nombre + " " + apellido + " - " + cedula + " - " + telefono;
     }
 }
-
-
-
