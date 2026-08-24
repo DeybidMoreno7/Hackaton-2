@@ -1,5 +1,11 @@
+<<<<<<< HEAD:src/co/generation/clinica/datos/DatosCSV.java
 package co.generation.clinica.datos;
 
+=======
+package datos;
+import model.*;
+import service.ClinicaService;
+>>>>>>> 7e77c1fd76b66ed88405cbd826011a1bdd30b54e:src/datos/DatosCSV.java
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
