@@ -1,4 +1,4 @@
-package model;
+package co.generation.clinica.model;
 
 import interfaces.Registrable;
 
