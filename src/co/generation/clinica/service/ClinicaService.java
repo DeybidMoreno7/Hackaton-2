@@ -1,15 +1,11 @@
 package co.generation.clinica.service;
-
 import co.generation.clinica.interfaces.Consultable;
 import co.generation.clinica.model.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
 public class ClinicaService implements Consultable {
-
     private final List<Paciente> pacientes;
     private final List<Medico> medicos;
     private final List<Turno> turnos;
@@ -21,11 +17,9 @@ public class ClinicaService implements Consultable {
     public List<Paciente> getPacientes() {
         return pacientes;
     }
-
     public List<Medico> getMedicos() {
         return medicos;
     }
-
     public List<Turno> getTurnos() {
         return turnos;
     }
@@ -111,7 +105,6 @@ public class ClinicaService implements Consultable {
             System.out.println("No hay médicos registrados.");
             return;
         }
-
         List<Medico> copia = new ArrayList<>(medicos);
         copia.sort(Comparator.comparing(Medico::getEspecialidad)
                 .thenComparing(Medico::getApellido, String.CASE_INSENSITIVE_ORDER));

@@ -1,16 +1,13 @@
 package co.generation.clinica;
-
 import co.generation.clinica.datos.DatosCSV;
 import co.generation.clinica.model.*;
 import co.generation.clinica.service.ClinicaService;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-
     public static void main(String[] args) {
         ClinicaService servicio = new ClinicaService();
         DatosCSV.cargar(servicio);
@@ -19,7 +16,6 @@ public class Main {
         while (opcion != 0) {
             mostrarMenu();
             System.out.print("Seleccione una opción: ");
-
             try {
                 opcion = Integer.parseInt(sc.nextLine().trim());
             } catch (NumberFormatException e) {
@@ -64,10 +60,12 @@ public class Main {
                 default:
                     System.out.println("Opción no válida. Intente nuevamente.");
             }
+            System.out.println();
         }
 
         sc.close();
     }
+
     private static void mostrarMenu() {
         System.out.println("==========================================");
         System.out.println("||          CLINICAAPP - MENÚ           ||");
@@ -81,9 +79,9 @@ public class Main {
         System.out.println(" 7. Ver turnos por paciente               ");
         System.out.println(" 8. Cambiar estado de turno               ");
         System.out.println(" 9. Listar pacientes                      ");
-        System.out.println(" 10.Listar médicos                       ");
+        System.out.println(" 10.Listar médicos                        ");
         System.out.println(" 0. Salir                                 ");
-        System.out.println("==========================================");
+        System.out.println("__________________________________________");
     }
     private static void registrarPaciente(ClinicaService servicio, Scanner sc) {
         try {
@@ -108,13 +106,16 @@ public class Main {
             String nombre = sc.nextLine();
             System.out.print("Apellido: ");
             String apellido = sc.nextLine();
-            System.out.println("Especialidades disponibles: GENERAL, PEDIATRIA, CARDIOLOGIA, URGENCIAS");
-            System.out.print("Especialidad: ");
-            String espStr = sc.nextLine().trim().toUpperCase();
-            Especialidad esp = Especialidad.valueOf(espStr);
+            System.out.println("Especialidades disponibles:");
+            for (Especialidad e : Especialidad.values()) {
+                System.out.println(" " + e.getCodigo() + ". " + e.name());
+            }
+            System.out.print("Seleccione numeral: ");
+            int codEsp = Integer.parseInt(sc.nextLine().trim());
+            Especialidad esp = Especialidad.desdeCodigo(codEsp);
             Medico m = new Medico(nombre, apellido, esp);
             servicio.registrarMedico(m);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             System.out.println("Error: Especialidad no válida o datos incorrectos (" + e.getMessage() + ")");
         }
     }
@@ -171,7 +172,8 @@ public class Main {
 
             if (turnos.isEmpty()) {
                 System.out.println("No hay turnos agendados para ese día.");
-            } else {
+            } else
+                {  System.out.println("--- TURNOS DEL DÍA ---");
                 for (Turno t : turnos) {
                     System.out.println(t);
                 }
@@ -200,10 +202,12 @@ public class Main {
             System.out.println("Médico no encontrado.");
             return;
         }
+
         List<Turno> turnos = servicio.buscarPorMedico(med);
         if (turnos.isEmpty()) {
             System.out.println("El médico no tiene turnos asignados.");
-        } else {
+        } else
+            {System.out.println("-TURNOS DEL MÉDICO -");
             for (Turno t : turnos) {
                 System.out.println(t);
             }
@@ -223,6 +227,7 @@ public class Main {
         if (turnos.isEmpty()) {
             System.out.println("El paciente no tiene turnos asignados.");
         } else {
+            System.out.println("- TURNOS DEL PACIENTE -");
             for (Turno t : turnos) {
                 System.out.println(t);
             }
@@ -232,13 +237,17 @@ public class Main {
         try {
             System.out.print("ID del turno: ");
             int id = Integer.parseInt(sc.nextLine().trim());
-            System.out.println("Estados disponibles: PENDIENTE, ATENDIDO, CANCELADO");
-            System.out.print("Nuevo estado: ");
-            String estadoStr = sc.nextLine().trim().toUpperCase();
 
-            EstadoTurno nuevoEstado = EstadoTurno.valueOf(estadoStr);
+            System.out.println("Estados disponibles:");
+            for (EstadoTurno est : EstadoTurno.values()) {
+                System.out.println(" " + est.getCodigo() + ". " + est.name());
+            }
+            System.out.print("Seleccione numeral del nuevo estado: ");
+            int opEst = Integer.parseInt(sc.nextLine().trim());
+
+            EstadoTurno nuevoEstado = EstadoTurno.desdeCodigo(opEst);
             servicio.cambiarEstadoTurno(id, nuevoEstado);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             System.out.println("ID o estado ingresado no válido.");
         }
     }

@@ -1,26 +1,39 @@
 package co.generation.clinica.datos;
 
-import co.generation.clinica.model.*;
+import co.generation.clinica.model.EstadoTurno;
+import co.generation.clinica.model.Especialidad;
+import co.generation.clinica.model.Medico;
+import co.generation.clinica.model.Paciente;
+import co.generation.clinica.model.Turno;
 import co.generation.clinica.service.ClinicaService;
 
 import java.io.*;
+import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DatosCSV {
 
-    private static final String DIR = "datos/";
-    private static final String F_PACIENTES = DIR + "pacientes.csv";
-    private static final String F_MEDICOS = DIR + "medicos.csv";
-    private static final String F_TURNOS = DIR + "turnos.csv";
+    private static final String DIR_PATH = "datos";
+    private static final String F_PACIENTES = DIR_PATH + File.separator + "pacientes.csv";
+    private static final String F_MEDICOS = DIR_PATH + File.separator + "medicos.csv";
+    private static final String F_TURNOS = DIR_PATH + File.separator + "turnos.csv";
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public static void cargar(ClinicaService servicio) {
-        File directorio = new File(DIR);
-        if (!directorio.exists()) {
-            directorio.mkdirs();
+    private static void asegurarDirectorio() {
+        try {
+            Path path = Paths.get(DIR_PATH);
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+        } catch (IOException e) {
+            System.out.println("Error al crear carpeta datos: " + e.getMessage());
         }
+    }
+
+    public static void cargar(ClinicaService servicio) {
+        asegurarDirectorio();
         cargarPacientes(servicio);
         cargarMedicos(servicio);
         cargarTurnos(servicio);
@@ -30,7 +43,7 @@ public class DatosCSV {
         File f = new File(F_PACIENTES);
         if (!f.exists()) return;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+        try (BufferedReader br = Files.newBufferedReader(f.toPath())) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
@@ -43,8 +56,9 @@ public class DatosCSV {
                 String apellido = p[3].trim();
                 String telefono = p[4].trim();
 
-                Paciente pac = new Paciente(id, cedula, nombre, apellido, telefono);
-                servicio.getPacientes().add(pac);
+                Paciente paciente = new Paciente(cedula, nombre, apellido, telefono);
+                paciente.setId(id);
+                servicio.getPacientes().add(paciente);
             }
         } catch (Exception e) {
             System.out.println("Error al cargar pacientes: " + e.getMessage());
@@ -55,7 +69,7 @@ public class DatosCSV {
         File f = new File(F_MEDICOS);
         if (!f.exists()) return;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+        try (BufferedReader br = Files.newBufferedReader(f.toPath())) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
@@ -67,8 +81,9 @@ public class DatosCSV {
                 String apellido = p[2].trim();
                 Especialidad esp = Especialidad.valueOf(p[3].trim().toUpperCase());
 
-                Medico med = new Medico(id, nombre, apellido, esp);
-                servicio.getMedicos().add(med);
+                Medico medico = new Medico(nombre, apellido, esp);
+                medico.setId(id);
+                servicio.getMedicos().add(medico);
             }
         } catch (Exception e) {
             System.out.println("Error al cargar médicos: " + e.getMessage());
@@ -79,7 +94,7 @@ public class DatosCSV {
         File f = new File(F_TURNOS);
         if (!f.exists()) return;
 
-        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+        try (BufferedReader br = Files.newBufferedReader(f.toPath())) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 if (linea.trim().isEmpty()) continue;
@@ -87,15 +102,17 @@ public class DatosCSV {
                 if (p.length < 6) continue;
 
                 int id = Integer.parseInt(p[0].trim());
-                Paciente pac = servicio.buscarPorCedula(p[1].trim());
-                Medico med = servicio.buscarPorNombreApellido(p[2].trim(), p[3].trim());
+                Paciente paciente = servicio.buscarPorCedula(p[1].trim());
+                Medico medico = servicio.buscarPorNombreApellido(p[2].trim(), p[3].trim());
 
-                if (pac == null || med == null) continue;
+                if (paciente == null || medico == null) continue;
 
                 LocalDateTime fechaHora = LocalDateTime.parse(p[4].trim(), FMT);
                 EstadoTurno estado = EstadoTurno.valueOf(p[5].trim().toUpperCase());
 
-                Turno turno = new Turno(id, pac, med, fechaHora, estado);
+                Turno turno = new Turno(paciente, medico, fechaHora);
+                turno.setId(id);
+                turno.setEstado(estado);
                 servicio.getTurnos().add(turno);
             }
         } catch (Exception e) {
@@ -103,47 +120,49 @@ public class DatosCSV {
         }
     }
 
-
     public static void guardar(ClinicaService servicio) {
-        File directorio = new File(DIR);
-        if (!directorio.exists()) {
-            directorio.mkdirs();
-        }
+        asegurarDirectorio();
         guardarPacientes(servicio.getPacientes());
         guardarMedicos(servicio.getMedicos());
         guardarTurnos(servicio.getTurnos());
     }
 
     private static void guardarPacientes(List<Paciente> lista) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(F_PACIENTES))) {
-            for (Paciente p : lista) {
-                pw.println(p.getId() + "," + p.getCedula() + "," + p.getNombre() + "," + p.getApellido() + "," + p.getTelefono());
+        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(F_PACIENTES))) {
+            for (Paciente paciente : lista) {
+                bw.write(paciente.getId() + "," + paciente.getCedula() + "," + paciente.getNombre() + "," + paciente.getApellido() + "," + paciente.getTelefono());
+                bw.newLine();
             }
+            bw.flush();
         } catch (IOException e) {
             System.out.println("Error al guardar pacientes: " + e.getMessage());
         }
     }
 
     private static void guardarMedicos(List<Medico> lista) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(F_MEDICOS))) {
-            for (Medico m : lista) {
-                pw.println(m.getId() + "," + m.getNombre() + "," + m.getApellido() + "," + m.getEspecialidad());
+        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(F_MEDICOS))) {
+            for (Medico medico : lista) {
+                bw.write(medico.getId() + "," + medico.getNombre() + "," + medico.getApellido() + "," + medico.getEspecialidad());
+                bw.newLine();
             }
+            bw.flush();
         } catch (IOException e) {
             System.out.println("Error al guardar médicos: " + e.getMessage());
         }
     }
 
     private static void guardarTurnos(List<Turno> lista) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(F_TURNOS))) {
-            for (Turno t : lista) {
-                pw.println(t.getId() + "," +
-                        t.getPaciente().getCedula() + "," +
-                        t.getMedico().getNombre() + "," +
-                        t.getMedico().getApellido() + "," +
-                        t.getFechaHora().format(FMT) + "," +
-                        t.getEstado());
+        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(F_TURNOS))) {
+            for (Turno turno : lista) {
+                bw.write(turno.getId() + "," +
+                        turno.getPaciente().getCedula() + "," +
+                        turno.getMedico().getNombre() + "," +
+                        turno.getMedico().getApellido() + "," +
+                        turno.getFechaHora().format(FMT) + "," +
+                        turno.getEstado());
+                bw.newLine();
             }
+            bw.flush();
         } catch (IOException e) {
             System.out.println("Error al guardar turnos: " + e.getMessage());
         }
