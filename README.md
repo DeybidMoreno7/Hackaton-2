@@ -1,4 +1,4 @@
-# ClinicaApp - Sistema de Gestión de Turnos Médicos
+# Salud al Peluche - Sistema de Gestión de Turnos Médicos
 
 Aplicación de consola desarrollada en **Java con POO** para la gestión de pacientes, médicos y turnos en una clínica, con almacenamiento persistente en archivos CSV. Proyecto desarrollado como parte de la Hackathon #2 de Generation Colombia.
 

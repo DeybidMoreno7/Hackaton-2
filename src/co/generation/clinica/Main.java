@@ -68,7 +68,7 @@ public class Main {
 
     private static void mostrarMenu() {
         System.out.println("==========================================");
-        System.out.println("||          CLINICAAPP - MENÚ           ||");
+        System.out.println("||         Salud al Peluche - MENÚ       ||");
         System.out.println("==========================================");
         System.out.println(" 1. Registrar paciente                    ");
         System.out.println(" 2. Registrar médico                      ");
