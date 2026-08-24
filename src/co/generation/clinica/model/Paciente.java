@@ -1,8 +1,10 @@
 package co.generation.clinica.model;
 
+import co.generation.clinica.interfaces.Registrable;
 import java.util.Objects;
 
-public class Paciente {
+public class Paciente implements Registrable {
+
     private int id;
     private String cedula;
     private String nombre;
@@ -35,7 +37,7 @@ public class Paciente {
 
     public void setCedula(String cedula) {
         if (cedula == null || cedula.trim().isEmpty()) {
-            throw new IllegalArgumentException("Ingrese una cédula válida, por favor");
+            throw new IllegalArgumentException("Ingrese una cédula válida, por favor.");
         }
         this.cedula = cedula.trim();
     }
@@ -45,26 +47,30 @@ public class Paciente {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        if (nombre == null || nombre.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre no puede ser nulo ni vacío.");
+        }
+        this.nombre = nombre.trim();
     }
 
-    public String getApellido(){
+    public String getApellido() {
         return apellido;
     }
 
     public void setApellido(String apellido) {
         if (apellido == null || apellido.trim().isEmpty()) {
-            throw new IllegalArgumentException("Ingrese un apellido válido");
+            throw new IllegalArgumentException("Ingrese un apellido válido.");
         }
         this.apellido = apellido.trim();
     }
 
     public String getTelefono() {
         return telefono;
-}
-public void setTelefono (String telefono){
-        if (telefono == null || !telefono.matches ("^[0-9]{7,10}$")){
-            throw new IllegalArgumentException ("El número ingresado debe contener solo digitos numericos, max. 10, min . ");
+    }
+
+    public void setTelefono(String telefono) {
+        if (telefono == null || !telefono.matches("^[0-9]{7,10}$")) {
+            throw new IllegalArgumentException("El número ingresado debe contener solo dígitos numéricos (7 a 10).");
         }
         this.telefono = telefono.trim();
     }
@@ -85,5 +91,17 @@ public void setTelefono (String telefono){
     @Override
     public String toString() {
         return nombre + " " + apellido + " - " + cedula + " - " + telefono;
+    }
+
+    @Override
+    public String getDatosRegistro() {
+        return this.toString();
+    }
+    @Override
+    public boolean esValido() {
+        return cedula != null && !cedula.trim().isEmpty()
+                && nombre != null && !nombre.trim().isEmpty()
+                && apellido != null && !apellido.trim().isEmpty()
+                && telefono != null && telefono.matches("^[0-9]{7,10}$");
     }
 }

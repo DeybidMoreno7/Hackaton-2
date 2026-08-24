@@ -1,4 +1,3 @@
-
 package co.generation.clinica.model;
 
 import co.generation.clinica.interfaces.Registrable;
@@ -36,8 +35,7 @@ public class Medico implements Registrable {
     }
 
     public void setNombre(String nombre) {
-
-        if(nombre==null||nombre.trim().isEmpty()){
+        if (nombre == null || nombre.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre no puede ser nulo ni vacio.");
         }
         this.nombre = nombre.trim();
@@ -48,8 +46,7 @@ public class Medico implements Registrable {
     }
 
     public void setApellido(String apellido) {
-
-        if(apellido==null||apellido.trim().isEmpty()){
+        if (apellido == null || apellido.trim().isEmpty()) {
             throw new IllegalArgumentException("El apellido no puede ser nulo ni vacío.");
         }
         this.apellido = apellido.trim();
@@ -60,25 +57,28 @@ public class Medico implements Registrable {
     }
 
     public void setEspecialidad(Especialidad especialidad) {
-        if(nombre==null){
+        // CORREGIDO: Se valida especialidad en lugar de nombre
+        if (especialidad == null) {
             throw new IllegalArgumentException("La especialidad no puede ser nula.");
         }
         this.especialidad = especialidad;
     }
 
-    public boolean equals(Object obj){
-        if(this==obj){
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if (obj==null||getClass() != obj.getClass()){
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         Medico medico = (Medico) obj;
         return this.nombre.equalsIgnoreCase(medico.nombre) && this.apellido.equalsIgnoreCase(medico.apellido);
     }
 
-    public String toString(){
-        return "Dr. "+nombre+" "+apellido+" - "+especialidad;
+    @Override
+    public String toString() {
+        return "Dr. " + nombre + " " + apellido + " - " + especialidad;
     }
 
     @Override
@@ -88,13 +88,13 @@ public class Medico implements Registrable {
 
     @Override
     public boolean esValido() {
-        if(this.nombre==null || this.nombre.trim().isEmpty()){
+        if (this.nombre == null || this.nombre.trim().isEmpty()) {
             return false;
         }
-        if(this.apellido==null || this.apellido.trim().isEmpty()){
+        if (this.apellido == null || this.apellido.trim().isEmpty()) {
             return false;
         }
-        if(this.especialidad==null){
+        if (this.especialidad == null) {
             return false;
         }
         return true;
