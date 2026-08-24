@@ -17,7 +17,7 @@ public class Paciente {
     }
 
     public Paciente(int id, String cedula, String nombre, String apellido, String telefono) {
-        this(cedula, nombre, apellido, telefono)
+        this(cedula, nombre, apellido, telefono);
         this.id = id;
     }
 
@@ -37,7 +37,16 @@ public class Paciente {
         }
         this.nombre=nombre.trim();
     }
-public String getApellido(){
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido(){
         return apellido;
 }
 public void setApellido (String apellido){
@@ -51,7 +60,7 @@ public String getTelefono (){
 }
 public void setTelefono (String telefono){
         if (telefono == null || !telefono.matches ("^[0-9]{7,10}$")){
-            throw new IllegalArgumentException ("El número ingresado debe contener solo digitos numericos, max. 10, min . ")
+            throw new IllegalArgumentException ("El número ingresado debe contener solo digitos numericos, max. 10, min . ");
         }
         this.telefono =telefono;
 }

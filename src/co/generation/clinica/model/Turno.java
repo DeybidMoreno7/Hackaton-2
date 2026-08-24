@@ -80,10 +80,11 @@ public class Turno {
 
     @Override
     public String toString() {
-        return "["+estado+"]"  + paciente +
+        return "[" + estado + "]" + paciente +
                 " - " + medico +
                 " - " + fechaHora;
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -96,4 +97,5 @@ public class Turno {
         return Objects.equals(medico, otroTurno.medico)
                 && Objects.equals(fechaHora, otroTurno.fechaHora);
     }
+}
 
