@@ -96,4 +96,4 @@ public class Turno {
         return Objects.equals(medico, otroTurno.medico)
                 && Objects.equals(fechaHora, otroTurno.fechaHora);
     }
-}
+
