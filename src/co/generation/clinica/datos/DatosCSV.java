@@ -1,4 +1,4 @@
-package datos;
+package co.generation.clinica.datos;
 
 import java.io.*;
 import java.time.LocalDateTime;
